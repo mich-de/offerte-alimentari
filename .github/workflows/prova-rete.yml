@@ -1,0 +1,18 @@
+# Prova una tantum: i server di GitHub riescono a raggiungere i siti dei volantini? Si lancia solo a mano.
+name: Prova rete
+on: workflow_dispatch
+jobs:
+  prova:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Richieste di prova
+        run: |
+          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126 Safari/537.36"
+          for u in \
+            "https://www.doveconviene.it/sorrento/iper-e-super" \
+            "https://www.doveconviene.it/sorrento/volantino/conad" \
+            "https://api-viewer-zmags.shopfully.cloud/publication_pages/it_it/957387/1" \
+            "https://shopfully-publication-api.global.ssl.fastly.net/publication_pages/it_it/937183/enr/1" ; do
+            curl -s -o /tmp/r.txt -w "HTTP %{http_code} | %{size_download} byte | %{time_total}s | $u\n" -A "$UA" "$u"
+          done
+          python3 --version
